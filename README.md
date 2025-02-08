@@ -1,3 +1,5 @@
+# HolyC
+
 ```holyc
 U0 SieveOfEratosthenes(I64 limit)
 {
@@ -35,4 +37,71 @@ U0 Main()
 }
 
 Main;
+```
+
+# Limbo
+```
+implement SieveOfEratosthenes;
+
+include "sys.m";
+    sys: Sys;
+include "draw.m";
+include "math.m";
+    math: Math;
+
+SieveOfEratosthenes: module {
+    init: fn(ctxt: ref Draw->Context, argv: list of string);
+};
+
+init(ctxt: ref Draw->Context, argv: list of string)
+{
+    sys = load Sys Sys->PATH;
+    math = load Math Math->PATH;
+
+    if (math == nil) {
+        sys->fprint(sys->fildes(2), "fail: couldn't load Math module\n");
+        exit;
+    }
+
+    limit := 1000000;
+    
+    if (tl argv != nil)
+        limit = int hd(tl argv);
+		
+    n := (limit-1)/2;
+    isComposite := array[n] of byte;
+
+    for (p := 0; p < n; p++)
+        isComposite[p] = byte 0;
+
+    sqrtLimit := int math->sqrt(real limit);
+    
+    for (i := 3; i <= sqrtLimit; i += 2) {
+        idx := (i-3)/2;
+        if (isComposite[idx] == byte 0) {
+            for (j := i * i; j <= limit; j += 2*i) {
+                if (j % 2 == 1) {
+                    markIdx := (j-3)/2;
+                    if (markIdx < n)
+                        isComposite[markIdx] = byte 1;
+                }
+            }
+        }
+    }
+
+    count := 1;
+    sys->print("2\n");
+    
+    for (k := 0; k < n; k++) {
+        if (isComposite[k] == byte 0) {
+            num := 2*k + 3;
+            if (num <= limit) {
+                sys->print("%d\n", num);
+                count++;
+            }
+        }
+    }
+    
+    sys->print("\nFound %d primes up to %d\n", count, limit);
+}
 ```
