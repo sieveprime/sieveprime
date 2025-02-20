@@ -105,32 +105,3 @@ init(ctxt: ref Draw->Context, argv: list of string)
     sys->print("\nFound %d primes up to %d\n", count, limit);
 }
 ```
-
-# RC
-```shell
-#!/bin/rc
-
-fn sieve {
-    n=$1
-    {seq 2 $n} >nums
-    for(p in `{cat nums}){
-        if(~ $p `{cat nums}){
-            i=`{echo $p '*' $p | hoc}
-            while(~ $#i 1 && test $i -le $n){
-                grep -v '^'$i'$' nums >nums.tmp
-                mv nums.tmp nums
-                i=`{echo $i '+' $p | hoc}
-            }
-        }
-    }
-    cat nums
-    rm -f nums nums.tmp
-}
-
-if(! ~ $#* 1) {
-    echo 'usage: sieve number' >[1=2]
-    exit 1
-}
-sieve $1
-
-```
