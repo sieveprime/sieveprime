@@ -6,7 +6,6 @@ U0 SieveOfEratosthenes(I64 limit)
   U8 *is_prime = MAlloc(limit + 1);
   MemSet(is_prime, 1, limit + 1);
   is_prime[0] = is_prime[1] = 0;
-  
   I64 i, j;
   for (i = 2; i * i <= limit; i++) {
     if (is_prime[i]) {
@@ -22,7 +21,6 @@ U0 SieveOfEratosthenes(I64 limit)
       count++;
     }
   }
-  
   "\nFound %d primes.\n", count;
   Free(is_prime);
 }
